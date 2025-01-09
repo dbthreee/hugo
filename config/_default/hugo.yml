@@ -1,5 +1,5 @@
 baseURL: 'https://dbthreee.github.io/hugo/'
-languageCode: 'en-us'
+languageCode: 'en'
 title: 'Title'
 theme: 'hugo-theme-stack'
 
@@ -50,7 +50,7 @@ services:
 
 # 分页
 pagination:
-    pagerSize: 3
+    pagerSize: 5
 
 permalinks:
     post: /p/:slug/
@@ -91,7 +91,7 @@ params:
 
     comments:
         enabled: true
-        provider: utterances
+        provider: giscus
 
         utterances:
             repo: dbthreee/comments
@@ -134,16 +134,21 @@ params:
 
     defaultImage:
         opengraph:
-            enabled: false
-            local: false
-            src:
+            enabled: true
+            local: true
+            src: img/default.jpg
 
     colorScheme:
         # Display toggle
         toggle: true
-
         # Available values: auto, light, dark
         default: auto
+
+    imageProcessing:
+        cover:
+            enabled: true
+        content:
+            enabled: true
 
 menu:
     main: []

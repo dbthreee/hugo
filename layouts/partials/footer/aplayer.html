@@ -14,79 +14,6 @@
 {{ $aPlayerJS := resources.Get "js/APlayer.min.js" }}
 <script src="{{ $aPlayerJS.RelPermalink }}"></script>
 
-
-<script>
-    let ap = null
-
-    // 初始化 APlayer 实例
-    Object.defineProperty(document.querySelector('meting-js'), "aplayer", {
-        set: function(aplayer) {
-            ap = aplayer
-            ready()
-        }
-    })
-
-    // 准备播放器
-    function ready() {
-        if(ap) {
-            ap.on('canplay', restorePlaybackState)
-        }
-    }
-
-    // 动态加载页面内容
-    async function loadContent(url) {
-        const response = await fetch(url)
-        const text = await response.text()
-        document.getElementById('content').innerHTML = text
-        window.history.pushState({path: url}, '', url)
-    }
-
-    // 恢复播放状态
-    function restorePlaybackState() {
-        const musicIndex = sessionStorage.getItem("musicIndex")
-        const musicTime = sessionStorage.getItem("musicTime")
-
-        if(musicIndex !== null && musicTime !== null) {
-            ap.list.switch(parseInt(musicIndex, 10))
-            ap.seek(parseFloat(musicTime))
-            ap.play()
-            sessionStorage.removeItem("musicIndex")
-            sessionStorage.removeItem("musicTime")
-        }
-    }
-
-    // 保存播放状态
-    function savePlaybackState() {
-        if(ap && !ap.audio.paused) {
-            sessionStorage.setItem("musicIndex", ap.list.index)
-            sessionStorage.setItem("musicTime", ap.audio.currentTime)
-        }
-    }
-
-    // 处理链接点击事件，阻止默认行为并加载新内容
-    document.addEventListener('click', function(event) {
-        if(event.target.tagName.toLowerCase() === 'a' && event.target.href) {
-            event.preventDefault()
-            savePlaybackState()
-            loadContent(event.target.href)
-        }
-    })
-
-    // 处理浏览器的前进后退按钮
-    window.addEventListener('popstate', function(event) {
-        if(event.state && event.state.path) {
-            loadContent(event.state.path)
-        } else {
-            loadContent(window.location.pathname + window.location.search)
-        }
-    })
-
-    // 页面加载时初始化内容
-    window.onload = function() {
-        loadContent(window.location.pathname + window.location.search)
-    };
-</script>
-
 <style>
     .aplayer.aplayer-fixed,
     .aplayer-body {
@@ -94,4 +21,44 @@
     }
 </style>
 
-<meting-js server="netease" type="playlist" id="8264385659" class="meting-js" fixed=true autoplay=true preload="auto"></meting-js>
+<meting-js server="netease" type="playlist" id="8264385659" class="meting-js" fixed="true" autoplay="true"
+    preload="auto" />
+
+<script>
+    ap = null
+    Object.defineProperty(document.querySelector('meting-js'), "aplayer", {
+        set: function(aplayer) {
+            ap = aplayer
+            ready()
+        }
+    })
+    isRecover = false
+    function ready() {
+        ap.on('canplay', function() {
+            if(!isRecover) {
+                if(sessionStorage.getItem("musicIndex") != null) {
+                    musicIndex = sessionStorage.getItem("musicIndex")
+                    musicTime = sessionStorage.getItem("musicTime")
+                    if(ap.list.index != musicIndex) {
+                        ap.list.switch(musicIndex)
+                    } else {
+                        ap.seek(musicTime)
+                        ap.play()
+                        sessionStorage.clear()
+                        isRecover = true
+                    }
+                } else {
+                    isRecover = true
+                }
+            }
+        })
+    }
+    window.onbeforeunload = function(event) {
+        if(!ap.audio.paused) {
+            musicIndex = ap.list.index
+            musicTime = ap.audio.currentTime
+            sessionStorage.setItem("musicIndex", musicIndex)
+            sessionStorage.setItem("musicTime", musicTime)
+        }
+    };
+</script>
