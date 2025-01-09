@@ -50,7 +50,7 @@ services:
 
 # 分页
 pagination:
-    pagerSize: 3
+    pagerSize: 5
 
 permalinks:
     post: /p/:slug/
@@ -134,16 +134,21 @@ params:
 
     defaultImage:
         opengraph:
-            enabled: false
-            local: false
-            src:
+            enabled: true
+            local: true
+            src: img/default.jpg
 
     colorScheme:
         # Display toggle
         toggle: true
-
         # Available values: auto, light, dark
         default: auto
+
+    imageProcessing:
+        cover:
+            enabled: true
+        content:
+            enabled: true
 
 menu:
     main: []
