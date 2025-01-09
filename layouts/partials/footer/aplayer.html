@@ -1,0 +1,16 @@
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script> -->
+
+<link rel="stylesheet" href="{{.Site.BaseURL}}/css/APlayer.min.css">
+<script src="{{.Site.BaseURL}}/js/APlayer.min.js"></script>
+<script src="{{.Site.BaseURL}}/js/Meting.min.js"></script>
+<style>
+    .aplayer.aplayer-fixed,
+    .aplayer-body {
+        bottom: 200px !important;
+    }
+</style>
+
+<meting-js server="netease" type="playlist" id="8264385659" class="meting-js" fixed=true autoplay=true muted: true
+    loop="all" preload="metadata" />
