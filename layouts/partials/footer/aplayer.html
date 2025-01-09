@@ -36,15 +36,15 @@
     function ready() {
         ap.on('canplay', function() {
             if(!isRecover) {
-                if(localStorage.getItem("musicIndex") != null) {
-                    musicIndex = localStorage.getItem("musicIndex")
-                    musicTime = localStorage.getItem("musicTime")
+                if(sessionStorage.getItem("musicIndex") != null) {
+                    musicIndex = sessionStorage.getItem("musicIndex")
+                    musicTime = sessionStorage.getItem("musicTime")
                     if(ap.list.index != musicIndex) {
                         ap.list.switch(musicIndex)
                     } else {
                         ap.seek(musicTime)
                         ap.play()
-                        localStorage.clear()
+                        sessionStorage.clear()
                         isRecover = true
                     }
                 } else {
@@ -57,8 +57,8 @@
         if(!ap.audio.paused) {
             musicIndex = ap.list.index
             musicTime = ap.audio.currentTime
-            localStorage.setItem("musicIndex", musicIndex)
-            localStorage.setItem("musicTime", musicTime)
+            sessionStorage.setItem("musicIndex", musicIndex)
+            sessionStorage.setItem("musicTime", musicTime)
         }
     };
 </script>
