@@ -1,0 +1,185 @@
+baseURL: 'https://dbthreee.github.io/hugo/'
+languageCode: 'en-us'
+title: 'Title'
+theme: 'hugo-theme-stack'
+
+DefaultContentLanguage: zh-cn
+
+hasCJKLanguage: true
+
+# 配置国际化
+languages:
+    zh-cn:
+        languageName: 简体中文
+        title: 演示站点
+        weight: 1
+        params:
+            sidebar:
+                subtitle: 演示说明
+
+    en:
+        languageName: English
+        title: Example Site
+        weight: 2
+        params:
+            sidebar:
+                subtitle: Example description
+
+services:
+    # Change it to your Disqus shortname before using
+    disqus:
+        shortname: 'dbhtree'
+
+# 分页
+pagination:
+    pagerSize: 3
+
+permalinks:
+    post: /p/:slug/
+    page: /:slug/
+
+params:
+    mainSections:
+        - post
+
+    featuredImageField: image
+    rssFullContent: true
+    favicon: /favicon.ico
+    description: '这个人很懒，什么描述都没有'
+
+    footer:
+        since: 2024
+        customText: ''
+
+    dateFormat:
+        published: 2006-01-02
+        lastUpdated: 2006-01-02 15:04:05
+
+    sidebar:
+        emoji: 🍥
+        subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        avatar:
+            enabled: true
+            local: true
+            src: img/avatar.jpg
+
+    article:
+        math: true
+        toc: true
+        readingTime: true
+        license:
+            enabled: false
+            default: Licensed under CC BY-NC-SA 4.0
+
+    comments:
+        enabled: true
+        provider: utterances
+
+        utterances:
+            repo: dbthreee/comments
+            issueTerm: pathname
+            label:
+
+        giscus:
+            repo: dbthreee/comments
+            repoID: R_kgDONnzbxA
+            category: Announcements
+            categoryID: DIC_kwDONnzbxM4Cl3MS
+            mapping: pathname
+            lightTheme: 'light'
+            darkTheme: 'dark'
+            reactionsEnabled: 1
+            emitMetadata: 0
+
+    widgets:
+        homepage:
+            - type: search
+            - type: archives
+              params:
+                  limit: 5
+            - type: categories
+              params:
+                  limit: 10
+            - type: tag-cloud
+              params:
+                  limit: 10
+        page:
+            - type: toc
+
+    opengraph:
+        twitter:
+            # Your Twitter username
+            site:
+
+            # Available values: summary, summary_large_image
+            card: summary_large_image
+
+    defaultImage:
+        opengraph:
+            enabled: false
+            local: false
+            src:
+
+    colorScheme:
+        # Display toggle
+        toggle: true
+
+        # Available values: auto, light, dark
+        default: auto
+
+menu:
+    main: []
+
+    social:
+        - identifier: github
+          name: GitHub
+          url: https://github.com/dbthreee/hugo
+          params:
+              icon: brand-github
+
+        - identifier: twitter
+          name: Twitter
+          url: https://twitter.com
+          params:
+              icon: brand-twitter
+
+related:
+    includeNewer: true
+    threshold: 60
+    toLower: false
+    indices:
+        - name: tags
+          weight: 100
+
+        - name: categories
+          weight: 200
+
+markup:
+    goldmark:
+        extensions:
+            passthrough:
+                enable: true
+                delimiters:
+                    block:
+                        - - \[
+                          - \]
+                        - - $$
+                          - $$
+                    inline:
+                        - - \(
+                          - \)
+        renderer:
+            ## Set to true if you have HTML content inside Markdown
+            unsafe: true
+    tableOfContents:
+        endLevel: 4
+        ordered: true
+        startLevel: 2
+    highlight:
+        noClasses: false
+        codeFences: true
+        guessSyntax: true
+        lineNoStart: 1
+        lineNos: true
+        lineNumbersInTable: true
+        tabWidth: 4
