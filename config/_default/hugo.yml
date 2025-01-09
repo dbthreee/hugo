@@ -3,6 +3,24 @@ languageCode: 'en-us'
 title: 'Title'
 theme: 'hugo-theme-stack'
 
+assetDir: assets
+resourceDir: resources
+contentDir: content
+dataDir: data
+publishDir: public
+themesDir: themes
+layoutDir: layouts
+archetypeDir: archetypes
+i18nDir: i18n
+staticDir: static
+
+defaultContentLanguageInSubdir: true
+enableMissingTranslationPlaceholders: false
+
+enableEmoji: true
+enableRobotsTXT: true
+enableGitInfo: false
+
 DefaultContentLanguage: zh-cn
 
 hasCJKLanguage: true
