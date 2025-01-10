@@ -2,7 +2,7 @@
 date: '2025-01-09T20:10:57+08:00'
 draft: false
 title: 'Go_home'
-image: 'images/daydayup.jpg'
+image: images/study/daydayup.jpg
 tags: ['home', 'school']
 ---
 

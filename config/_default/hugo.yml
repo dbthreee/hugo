@@ -53,8 +53,9 @@ pagination:
     pagerSize: 5
 
 permalinks:
-    post: /p/:slug/
+    post: /:year/:month/:day/:slug/
     page: /:slug/
+    test: /test/:year/:month/:day/:slug/
 
 params:
     mainSections:
