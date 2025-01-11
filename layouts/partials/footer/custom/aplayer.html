@@ -1,0 +1,25 @@
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script> -->
+
+{{/* 处理并添加指纹到 APlayer.min.css */}}
+{{ $aPlayerCSS := resources.Get "scss/APlayer.min.css"}}
+<link rel="stylesheet" href="{{ $aPlayerCSS.RelPermalink }}">
+
+{{/* 处理并添加指纹到 APlayer.min.js */}}
+{{ $aPlayerJS := resources.Get "js/APlayer.min.js" }}
+<script src="{{ $aPlayerJS.RelPermalink }}"></script>
+
+{{/* 处理并添加指纹到 vibrant.min.js */}}
+{{ $vibrantJS := resources.Get "js/vibrant.min.js" }}
+<script src="{{ $vibrantJS.RelPermalink }}"></script>
+
+<!-- <meting-js server="netease" type="playlist" id="8264385659" class="meting-js" fixed="true" autoplay="false"
+    preload="auto" mutex="true" order="random"></meting-js> -->
+
+<style>
+    .aplayer.aplayer-fixed,
+    .aplayer-body {
+        bottom: 200px !important;
+    }
+</style>

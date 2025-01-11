@@ -1,0 +1,122 @@
+{{/* 获取并处理 music.json */}}
+{{ $music := resources.Get "json/music.json" }}
+{{ $musicContent := $music.Content | safeJS }}
+
+{{/* 处理并添加指纹到 Meting.min.js */}}
+{{ $metingJS := resources.Get "js/Meting.min.js" }}
+<script src="{{ $metingJS.RelPermalink }}"></script>
+
+<script>
+    // 将 Hugo 提供的 JSON 内容解析为 JavaScript 对象
+    const data = {{$musicContent}};
+
+    function initMetingJs() {
+        try {
+            // Ensure 'playlists' array exists and is not empty
+            if(!data.playlists || !Array.isArray(data.playlists) || data.playlists.length === 0) {
+                console.error('No playlists available in the JSON file.')
+                return
+            }
+
+            // Filter out playlists that have hidden set to true or are null/undefined
+            const visiblePlaylists = data.playlists.filter(playlist => playlist && !playlist.hidden)
+
+            // Check if there are any visible playlists after filtering
+            if(visiblePlaylists.length === 0) {
+                console.error('No visible playlists available after filtering.')
+                return
+            }
+
+            // Select a random playlist ID from the filtered list of playlists
+            const randomIndex = Math.floor(Math.random() * visiblePlaylists.length)
+            const selectedPlaylist = visiblePlaylists[randomIndex]
+
+            // Verify that the selected playlist has an 'id' property
+            if(!selectedPlaylist || !selectedPlaylist.id) {
+                console.error('Selected playlist does not have an ID.')
+                return
+            }
+            const selectedPlaylistId = selectedPlaylist.id
+
+            // Create the Meting.js element with the selected playlist ID
+            const metingElement = document.createElement('meting-js')
+            metingElement.setAttribute('server', 'netease')
+            metingElement.setAttribute('type', 'playlist')
+            metingElement.setAttribute('id', selectedPlaylistId)
+            metingElement.setAttribute('class', 'meting-js')
+            metingElement.setAttribute('fixed', 'true')
+            metingElement.setAttribute('autoplay', 'true')
+            metingElement.setAttribute('preload', 'auto')
+            metingElement.setAttribute('mutex', 'true')
+            metingElement.setAttribute('order', 'random')
+
+            // Append the created <meting-js> element to the body
+            document.body.appendChild(metingElement)
+
+            // Wait for the Meting.js player to be ready before defining properties
+            waitForPlayerReady(metingElement)
+
+        } catch(error) {
+            console.error('Error initializing Meting.js:', error)
+        }
+    }
+
+    function waitForPlayerReady(element) {
+        const checkInterval = setInterval(() => {
+            const aplayer = element.aplayer
+            if(aplayer) {
+                clearInterval(checkInterval)
+                setupAplayer(element, aplayer) // Pass element and aplayer to setupAplayer
+            }
+        }, 100) // Check every 100ms
+    }
+
+    function setupAplayer(element, aplayer) { // Add element as a parameter
+        let ap = aplayer
+        let isRecover = false
+
+        Object.defineProperty(element, "aplayer", {
+            get: function() {return ap},
+            set: function(newAplayer) {
+                ap = newAplayer
+                ready()
+            }
+        })
+
+        function ready() {
+            if(ap) {
+                ap.on('canplay', function() {
+                    if(!isRecover) {
+                        if(sessionStorage.getItem("musicIndex") !== null) {
+                            const musicIndex = sessionStorage.getItem("musicIndex")
+                            const musicTime = sessionStorage.getItem("musicTime")
+                            if(ap.list.index != musicIndex) {
+                                ap.list.switch(parseInt(musicIndex))
+                            } else {
+                                ap.seek(parseFloat(musicTime))
+                                ap.play()
+                                sessionStorage.clear()
+                                isRecover = true
+                            }
+                        } else {
+                            ap.play()
+                            isRecover = true
+                        }
+                    }
+                })
+            }
+        }
+
+        window.onbeforeunload = function(event) {
+            if(ap && !ap.audio.paused) {
+                const musicIndex = ap.list.index
+                const musicTime = ap.audio.currentTime
+                sessionStorage.setItem("musicIndex", musicIndex)
+                sessionStorage.setItem("musicTime", musicTime.toFixed(2)) // Store time with two decimal places
+            }
+        }
+    }
+
+    // Initialize Meting.js when the page loads
+    window.addEventListener('load', initMetingJs);
+</script>

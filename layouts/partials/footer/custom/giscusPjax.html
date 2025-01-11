@@ -1,0 +1,52 @@
+{{- with .Site.Params.comments.giscus -}}
+<script>
+    document.addEventListener('pjax:complete', () => {
+        // 检查新页面是否包含 .comment-container
+        const commentContainer = document.querySelector('.comment-container')
+        if(commentContainer && !document.querySelector("#giscus-script")) {
+            // 如果存在 .comment-container 并且没有 #giscus-script，则重新初始化 Giscus
+            addCommentScript(commentContainer)
+        }
+    })
+
+    function addCommentScript(commentContainer) {
+        // 动态创建 script 标签并插入到 DOM 中
+        let script = document.createElement('script')
+        script.id = 'giscus-script'
+        script.src = 'https://giscus.app/client.js'
+        script.setAttribute('data-repo', "{{- .repo -}}")
+        script.setAttribute('data-repo-id', "{{- .repoID -}}")
+        script.setAttribute('data-category', "{{- .category -}}")
+        script.setAttribute('data-category-id', "{{- .categoryID -}}")
+        script.setAttribute('data-mapping', "{{- default `title` .mapping -}}")
+        script.setAttribute('data-strict', "{{- default 0 .strict -}}")
+        script.setAttribute('data-reactions-enabled', "{{- default 1 .reactionsEnabled -}}")
+        script.setAttribute('data-emit-metadata', "{{- default 0 .emitMetadata -}}")
+        script.setAttribute('data-input-position', "{{- default `top` .inputPosition -}}")
+        script.setAttribute('data-theme', "{{- default `light` .lightTheme -}}")
+        script.setAttribute('data-lang',
+            "{{ if eq $.Site.Language.Lang `zh-cn` }}zh-CN{{ else }}{{ default `en` $.Site.Language.Lang }}{{ end }}")
+        script.setAttribute('data-loading', "{{- .loading -}}")
+        script.setAttribute('crossorigin', 'anonymous')
+        script.setAttribute('async', 'true')
+        commentContainer.appendChild(script)
+
+        initGiscus()
+    }
+
+    function initGiscus() {
+        addEventListener("message", (e) => {
+            if(event.origin !== "https://giscus.app") return
+            handler()
+        })
+        window.addEventListener("onColorSchemeChange", handler)
+
+        function handler() {
+            const theme = document.documentElement.dataset.scheme === "light"
+                ? '{{- default "light" .lightTheme -}}'
+                : '{{- default "dark_dimmed" .darkTheme -}}'
+            setGiscusTheme(theme)
+        }
+    }
+</script>
+{{- end -}}
