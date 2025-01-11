@@ -1,0 +1,41 @@
+{{ with resources.Get "js/animouse.js" }}
+<script src="{{ .RelPermalink }}"></script>
+{{ end }}
+
+<script>
+	console.log(window.ANIMouse)
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		// 确保 ANIMouse 可用
+		if (window.ANIMouse) {
+			console.log('ANIMouse is available')
+
+			const normalCursor = ['body', 'html', '.article-content img']
+			const linkCursor = [
+				'a:hover',
+				'button:hover',
+				'.copyCodeButton:hover',
+				'#dark-mode-toggle'
+			]
+			const textCursor = ['input:hover']
+
+			// 使用打包后的 animouse.js 方法
+			window.ANIMouse.loadAndApplyCursor(
+				normalCursor,
+				'../cursor/ani/2/normal.ani'
+			)
+			window.ANIMouse.loadAndApplyCursor(
+				linkCursor,
+				'../cursor/ani/2/link.ani'
+			)
+			window.ANIMouse.loadAndApplyCursor(
+				textCursor,
+				'../cursor/ani/2/text.ani'
+			)
+		} else {
+			console.error('ANIMouse is not defined')
+		}
+	})
+</script>

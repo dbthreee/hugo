@@ -3,14 +3,17 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script> -->
 
 {{/* 处理并添加指纹到 APlayer.min.css */}}
-{{ $aPlayerCSS := resources.Get "scss/APlayer.min.css"}}
-<link rel="stylesheet" href="{{ $aPlayerCSS.RelPermalink }}">
+<!-- prettier-ignore  -->
+{{ $aPlayerCSS := resources.Get "scss/aplayer/APlayer.min.css"}}
+<link rel="stylesheet" href="{{ $aPlayerCSS.RelPermalink }}" />
 
 {{/* 处理并添加指纹到 APlayer.min.js */}}
+<!-- prettier-ignore  -->
 {{ $aPlayerJS := resources.Get "js/APlayer.min.js" }}
 <script src="{{ $aPlayerJS.RelPermalink }}"></script>
 
 {{/* 处理并添加指纹到 vibrant.min.js */}}
+<!-- prettier-ignore  -->
 {{ $vibrantJS := resources.Get "js/vibrant.min.js" }}
 <script src="{{ $vibrantJS.RelPermalink }}"></script>
 
@@ -18,8 +21,8 @@
     preload="auto" mutex="true" order="random"></meting-js> -->
 
 <style>
-    .aplayer.aplayer-fixed,
-    .aplayer-body {
-        bottom: 200px !important;
-    }
+	.aplayer.aplayer-fixed,
+	.aplayer-body {
+		bottom: 200px !important;
+	}
 </style>
