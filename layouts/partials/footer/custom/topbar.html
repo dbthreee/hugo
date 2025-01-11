@@ -1,0 +1,29 @@
+{{ with resources.Get "js/topbar.min.js" }}
+<script src={{ .Permalink }}></script>
+{{ end }}
+
+<script>
+
+    topbar.config({
+        barColors: {
+            '0': 'rgba(255,  255, 255, 1)', // 进度0%白色
+            '1.0': 'rgba(0, 149, 234,  1)' // 进度100%蓝色
+        }
+    })
+
+    // topbar.config({
+    //     barColors: {
+    //         '0': 'rgba(0, 149, 234,  1)', // 进度0%白色
+    //         '1.0': 'rgba(0, 149, 234,  1)' // 进度100%蓝色
+    //     }
+    // })
+
+    document.addEventListener('pjax:send', () => {
+        // 显示顶部进度条
+        topbar.show()
+    })
+
+    document.addEventListener('pjax:complete', () => {
+        topbar.hide()
+    })
+</script>

@@ -1,5 +1,5 @@
+{{- with .Site.Params.comments.giscus -}}
 <div class="comment-container">
-    {{- with .Site.Params.comments.giscus -}}
     <script id="giscus-script" src="https://giscus.app/client.js" data-repo="{{- .repo -}}"
         data-repo-id="{{- .repoID -}}" data-category="{{- .category -}}" data-category-id="{{- .categoryID -}}"
         data-mapping="{{- default `title` .mapping -}}" data-strict="{{- default 0 .strict -}}"
@@ -34,5 +34,5 @@
             }
         })();
     </script>
-    {{- end -}}
 </div>
+{{- end -}}
