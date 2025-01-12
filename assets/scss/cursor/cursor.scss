@@ -3,7 +3,7 @@
 body,
 html,
 .article-content img {
-  cursor: url(../cursor/png/normal.png),
+  cursor: url(../cursor/apng/5/normal.png),
   auto !important;
 }
 
@@ -12,7 +12,7 @@ a:hover,
 button:hover,
 .copyCodeButton:hover,
 #dark-mode-toggle {
-  cursor: url(../cursor/png/select.png),
+  cursor: url(../cursor/apng/5/link.png),
   auto;
 }
 
@@ -23,6 +23,6 @@ input:hover,
 .article-content span,
 .article-content li,
 .article-content p {
-  cursor: url(../cursor/png/text.png),
+  cursor: url(../cursor/apng/5/text.png),
   auto;
 }
