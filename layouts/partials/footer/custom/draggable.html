@@ -1,0 +1,97 @@
+<div
+	id="player-container"
+	class="draggable"
+	style="
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 9999;
+		pointer-events: none;
+	"
+></div>
+<!-- 新增外部容器 -->
+
+<style>
+	.aplayer.aplayer-withlist.aplayer-fixed {
+		background: none;
+	}
+</style>
+
+<script>
+	// target elements with the "draggable" class
+	interact('.aplayer.aplayer-fixed').draggable({
+		// enable inertial throwing
+		inertia: true,
+		// keep the element within the area of its parent (#player-container)
+		modifiers: [
+			interact.modifiers.restrictRect({
+				restriction: '#player-container', // 使用选择器来指定限制范围
+				endOnly: true
+			})
+		],
+		// enable autoScroll
+		autoScroll: true,
+
+		listeners: {
+			move: dragMoveListener,
+			end(event) {}
+		}
+	})
+
+	function dragMoveListener(event) {
+		var target = event.target
+		// keep the dragged position in the data-x/data-y attributes
+		var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+		var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+
+		// translate the element
+		target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
+
+		// update the position attributes
+		target.setAttribute('data-x', x)
+		target.setAttribute('data-y', y)
+	}
+
+	// this function is used later in the resizing and gesture demos
+	window.dragMoveListener = dragMoveListener
+</script>
+<script>
+	// target elements with the "draggable" class
+	interact('.aplayer-body').draggable({
+		// enable inertial throwing
+		inertia: true,
+		// keep the element within the area of its parent (#player-container)
+		modifiers: [
+			interact.modifiers.restrictRect({
+				restriction: '#player-container', // 使用选择器来指定限制范围
+				endOnly: true
+			})
+		],
+		// enable autoScroll
+		autoScroll: true,
+
+		listeners: {
+			move: dragMoveListener,
+			end(event) {}
+		}
+	})
+
+	function dragMoveListener(event) {
+		var target = event.target
+		// keep the dragged position in the data-x/data-y attributes
+		var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+		var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+
+		// translate the element
+		target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
+
+		// update the position attributes
+		target.setAttribute('data-x', x)
+		target.setAttribute('data-y', y)
+	}
+
+	// this function is used later in the resizing and gesture demos
+	window.dragMoveListener = dragMoveListener
+</script>
