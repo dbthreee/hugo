@@ -10,4 +10,5 @@ image: images/base.jpg
 {{< figure src="images/study/daydayup.jpg" title="天天向上" >}}
 {{< figure src="images/school/日出.jpg" title="日出" >}}
 {{< figure src="images/home/楼梯口-竖.jpg" title="楼梯口-竖" >}}
+{{< figure src="images/others/cool.jpg" title="阁楼-上" >}}
 </div>
