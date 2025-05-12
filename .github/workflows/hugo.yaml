@@ -82,7 +82,8 @@ jobs:
           git config --global core.safecrlf true
           git config --global core.ignorecase false
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
-        timeout-minutes: 5
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
