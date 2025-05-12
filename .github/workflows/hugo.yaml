@@ -2,57 +2,49 @@ name: Deploy Hugo Site to GitHub Pages
 
 on:
   push:
-    branches: ["main"]  # 触发分支
-  workflow_dispatch:    # 允许手动触发
+    branches: ["main"]
+  workflow_dispatch:
 
-# 全局权限设置（关键修改点）
 permissions:
-  contents: write       # 必须要有写入权限
+  contents: write
   pages: write
   id-token: write
 
-# 并发控制
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 env:
-  HUGO_VERSION: "0.136.5"  # 指定 Hugo 版本
+  HUGO_VERSION: "0.136.5"
 
 jobs:
   build:
     name: Build Hugo Site
     runs-on: ubuntu-latest
     steps:
-      # 安装 Hugo
       - name: Install Hugo CLI
         run: |
           wget -O /tmp/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
           sudo dpkg -i /tmp/hugo.deb
           hugo version
 
-      # 安装 Dart Sass（如果主题需要）
       - name: Install Dart Sass
         run: sudo snap install dart-sass
 
-      # 检出代码
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: recursive  # 如果使用子模块必须开启
           fetch-depth: 0         # 获取完整历史
 
-      # 初始化 Pages
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
 
-      # 安装 Node.js 依赖（可选）
       - name: Install Node.js Dependencies
         if: contains(file, 'package-lock.json') || contains(file, 'npm-shrinkwrap.json')
         run: npm ci
 
-      # 构建 Hugo 站点
       - name: Build with Hugo
         env:
           HUGO_ENV: production
@@ -62,13 +54,11 @@ jobs:
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
 
-      # 验证构建结果
       - name: Validate Build Output
         run: |
           [ -d "./public" ] || (echo "ERROR: public directory not found" && exit 1)
           ls -la ./public
 
-      # 上传产物
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -82,7 +72,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # 官方推荐部署方式（自动处理权限）
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
