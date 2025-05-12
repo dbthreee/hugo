@@ -1,4 +1,4 @@
-name: Deploy Hugo to GitHub Pages
+name: Deploy Hugo Site to GitHub Pages
 
 on:
   push:
@@ -9,31 +9,30 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  actions: read  # 新增权限
+  actions: read
 
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: false
 
-defaults:
-  run:
-    shell: bash
+env:
+  HUGO_VERSION: "0.136.5"
 
 jobs:
   build:
+    name: Build Hugo Site
     runs-on: ubuntu-latest
-    env:
-      HUGO_VERSION: 0.136.5
     steps:
       - name: Install Hugo CLI
         run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
-          sudo dpkg -i ${{ runner.temp }}/hugo.deb
+          wget -O /tmp/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb
+          sudo dpkg -i /tmp/hugo.deb
+          hugo version
 
       - name: Install Dart Sass
         run: sudo snap install dart-sass
 
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -41,14 +40,16 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v4  # 更新到v4
+        uses: actions/configure-pages@v4
 
-      - name: Install Node.js dependencies
-        run: '[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true'
+      - name: Install Node.js Dependencies
+        run: |
+          if [ -f "package-lock.json" ] || [ -f "npm-shrinkwrap.json" ]; then
+            npm ci
+          fi
 
       - name: Build with Hugo
         env:
-          HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: |
           hugo \
@@ -56,24 +57,23 @@ jobs:
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
 
-      - name: Upload artifact (backup)
-        uses: actions/upload-artifact@v4  # 显式添加
-        with:
-          name: hugo-public-backup
-          path: ./public
-          retention-days: 1
+      - name: Validate Build Output
+        run: |
+          [ -d "./public" ] || (echo "ERROR: public directory not found" && exit 1)
+          ls -la ./public
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3  # 更新到v3
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
 
   deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Configure Git
         run: |
@@ -84,4 +84,5 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v3  # 更新到v3
+        uses: actions/deploy-pages@v3
+        timeout-minutes: 5
