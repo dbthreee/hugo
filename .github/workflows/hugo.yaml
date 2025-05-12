@@ -34,16 +34,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          submodules: recursive  # 如果使用子模块必须开启
-          fetch-depth: 0         # 获取完整历史
+          submodules: recursive
+          fetch-depth: 0
 
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
 
+      # 修复后的 Node.js 依赖安装步骤
       - name: Install Node.js Dependencies
-        if: contains(file, 'package-lock.json') || contains(file, 'npm-shrinkwrap.json')
-        run: npm ci
+        if: contains(github.event_name, 'push') || contains(github.event_name, 'workflow_dispatch')
+        run: |
+          if [ -f "package-lock.json" ] || [ -f "npm-shrinkwrap.json" ]; then
+            npm ci
+          fi
 
       - name: Build with Hugo
         env:
